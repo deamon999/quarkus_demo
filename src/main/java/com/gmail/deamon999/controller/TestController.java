@@ -3,6 +3,7 @@ package com.gmail.deamon999.controller;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import com.gmail.deamon999.model.Order;
-import jakarta.validation.constraints.NotBlank;
+import com.gmail.deamon999.service.GreetingService;
 import org.eclipse.microprofile.config.Config;
 import org.jboss.logging.Logger;
 
@@ -32,6 +33,16 @@ public class TestController {
     //directly with ConfigProperty.
     @Inject
     Config config;
+    @Inject
+    GreetingService greetingService;
+
+    @GET
+    @Path("/greeting")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String greeting(@QueryParam("age") int age) {
+        logger.info("Greeting method started");
+        return greetingService.greetingMessage(age);
+    }
 
 
     @GET
