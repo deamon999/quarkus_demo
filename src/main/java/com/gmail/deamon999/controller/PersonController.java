@@ -1,6 +1,6 @@
 package com.gmail.deamon999.controller;
 
-import javax.inject.Inject;
+import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -13,33 +13,29 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.gmail.deamon999.interceptor.LogEvent;
-import com.gmail.deamon999.model.Developer;
-import com.gmail.deamon999.repository.DeveloperRepository;
+import com.gmail.deamon999.model.Person;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.jboss.logging.Logger;
 
-@Path("/developer")
+@Path("/person")
 @Transactional
-public class DeveloperController {
-
-    private static final Logger logger = Logger.getLogger(DeveloperController.class);
-
-    @Inject
-    DeveloperRepository developerRepository;
+public class PersonController {
+    private static final Logger logger = Logger.getLogger(PersonController.class);
 
     @LogEvent
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createDeveloper(@Valid Developer developer) {
-        logger.info("Create developer method started");
-        developerRepository.persist(developer);
+    public Response createPerson(@Valid Person person) {
+        logger.info("Create person method started");
+        person.persist();
         return Response.created(
                         UriBuilder
                                 .fromResource(DeveloperController.class)
-                                .path(Long.toString(developer.getId()))
+                                .path(Long.toString(person.id))
                                 .build()
                 )
-                .entity(developer)
+                .entity(person)
                 .build();
     }
 
@@ -47,10 +43,11 @@ public class DeveloperController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(Transactional.TxType.NEVER)
-    public Response getAllDevelopers() {
-        logger.info("Get all developers method started");
+    public Response getAllPersons() {
+        logger.info("Get all persons method started");
+        List<Person> list = Person.listAll();
         return Response.ok()
-                .entity(developerRepository.listAll())
+                .entity(list)
                 .build();
     }
 }
