@@ -1,7 +1,5 @@
 package com.gmail.deamon999.dto;
 
-import java.time.LocalDateTime;
-
 public class WorldClock {
     private String currentDateTime;
     private String dayOfTheWeek;
